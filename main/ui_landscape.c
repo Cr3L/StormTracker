@@ -211,8 +211,8 @@ void ui_landscape_screen_build(void)
     lv_image_set_scale(s_picture, 2 * LV_SCALE_NONE);
     lv_obj_center(s_picture);
 
-    s_clock = make_caption(screen, 23, 150, &lv_font_montserrat_14);
-    s_temperature = make_caption(screen, 42, 170, &lv_font_montserrat_28);
+    s_clock = make_caption(screen, 28, 184, &lv_font_montserrat_28);
+    s_temperature = make_caption(screen, 64, 170, &lv_font_montserrat_28);
     s_condition = make_caption(screen, 178, 184, &lv_font_montserrat_14);
     s_source = make_caption(screen, 211, 132, &lv_font_montserrat_14);
     /* Long event names stay within two lines above the source label. */
