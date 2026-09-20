@@ -6,6 +6,7 @@
 #include "esp_log.h"
 #include "esp_lvgl_port.h"
 #include "ui_storm.h"
+#include "ui_landscape.h"
 #include "ui_test.h"
 #include "ui_zoo.h"
 
@@ -22,6 +23,8 @@ static void build_active_screen(void)
     ui_zoo_screen_build();
 #elif BOOT_MODE == BOOT_MODE_STORM
     ui_storm_screen_build();
+#elif BOOT_MODE == BOOT_MODE_LANDSCAPE
+    ui_landscape_screen_build();
 #else
 /* Named rather than defaulted. A bare #else meant a new BOOT_MODE compiled
  * cleanly into whichever screen happened to be last. */

@@ -22,6 +22,7 @@
 #define BOOT_MODE_TEST_SCREEN 1
 #define BOOT_MODE_ZOO         2
 #define BOOT_MODE_STORM       3
+#define BOOT_MODE_LANDSCAPE   4
 
 /* STORM is a peer of ZOO, not its successor, and the ladder metaphor stops
  * being exact here — worth stating rather than papering over, because the
@@ -31,4 +32,5 @@
  * at all, so STORM -> ZOO swaps two variables at once and does not bisect
  * anything. To isolate a fault under the storm screen, step to TEST_SCREEN,
  * which is genuinely below both: LVGL with no assets and no network. */
-#define BOOT_MODE BOOT_MODE_STORM
+/* The landscape and original storm dial share the same weather service. */
+#define BOOT_MODE BOOT_MODE_LANDSCAPE

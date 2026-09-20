@@ -554,6 +554,10 @@ static esp_err_t parse_forecast(const char *body, weather_report_t *out)
     const cJSON *temp = cJSON_GetObjectItemCaseSensitive(first, "temperature");
     const cJSON *unit = cJSON_GetObjectItemCaseSensitive(first, "temperatureUnit");
     const cJSON *now_short = cJSON_GetObjectItemCaseSensitive(first, "shortForecast");
+    const cJSON *first_start = cJSON_GetObjectItemCaseSensitive(first, "startTime");
+    const cJSON *first_end = cJSON_GetObjectItemCaseSensitive(first, "endTime");
+    r.forecast_start = parse_iso8601(cJSON_IsString(first_start) ? first_start->valuestring : NULL);
+    r.forecast_end = parse_iso8601(cJSON_IsString(first_end) ? first_end->valuestring : NULL);
     if (cJSON_IsNumber(temp)) {
         r.temperature = temp->valueint;
     }

@@ -67,6 +67,8 @@ CONFIG_BOOTLOADER_LOG_LEVEL_WARN=y
 
 # LVGL ships only Montserrat 14 by default; the UI uses 28 for the centre value.
 CONFIG_LV_FONT_MONTSERRAT_28=y
+# Full warning words must fit the round screen without splitting mid-word.
+CONFIG_LV_FONT_MONTSERRAT_20=y
 
 # LVGL's builtin allocator reserves this much DRAM in .bss unconditionally, at
 # link time, whether or not anything uses it. The default 64 kB was the single

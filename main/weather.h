@@ -68,6 +68,9 @@ typedef struct {
     int temperature;            /* current period, in temperature_unit */
     char temperature_unit[2];   /* "F" or "C", as the service reports it */
     char now[64];               /* current period's shortForecast */
+    /* The landscape must not keep animating an expired forecast period. */
+    time_t forecast_start;
+    time_t forecast_end;
 } weather_report_t;
 
 /* How serious an active alert is, taken from the event's own name rather than

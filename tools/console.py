@@ -1,6 +1,7 @@
 """Drive the board's serial console non-interactively.
 
     python3 tools/console.py wifi_show
+    python tools/console.py --port COM4 ota_status
     python3 tools/console.py "wifi_set TestNetwork hunter2" wifi_show
     python3 tools/console.py --timeout 120 "ota http://192.168.1.125:8000/pandadeath.bin"
 
@@ -29,6 +30,7 @@ process list while running, and in whatever transcript is watching. Test with
 throwaway values; real ones get typed by a human at `idf.py monitor`.
 """
 
+import argparse
 import sys
 import time
 
@@ -95,21 +97,15 @@ def read_reply(port: serial.Serial, ceiling: float) -> bytes:
 
 
 def main() -> int:
-    args = sys.argv[1:]
+    parser = argparse.ArgumentParser(description="Run commands on the board's serial console.")
+    parser.add_argument("--port", default=PORT)
+    parser.add_argument("--timeout", type=float, default=REPLY_TIMEOUT)
+    parser.add_argument("commands", nargs="+")
+    args = parser.parse_args()
+    if args.timeout <= 0:
+        parser.error("--timeout must be positive")
 
-    ceiling = REPLY_TIMEOUT
-    if args and args[0] == "--timeout":
-        if len(args) < 2:
-            print(__doc__, file=sys.stderr)
-            return 2
-        ceiling = float(args[1])
-        args = args[2:]
-
-    if not args:
-        print(__doc__, file=sys.stderr)
-        return 2
-
-    with serial.Serial(PORT, BAUD, timeout=0.1) as port:
+    with serial.Serial(args.port, BAUD, timeout=0.1) as port:
         # Not asserted: this board wires neither line to EN/GPIO0, and driving
         # them would do nothing useful. Left explicit so nobody adds a reset
         # here expecting it to work — see CLAUDE.md on the two USB gestures.
@@ -122,10 +118,10 @@ def main() -> int:
         port.write(b"\n")
         drain(port, QUIET_TIME)
 
-        for command in args:
+        for command in args.commands:
             print(f"$ {command}")
             port.write(command.encode() + b"\r\n")
-            reply = read_reply(port, ceiling).decode(errors="replace")
+            reply = read_reply(port, args.timeout).decode(errors="replace")
             # The console echoes what was typed and re-prints the prompt around
             # the answer. Both are noise once the command is known, so only the
             # lines between them are shown.
@@ -134,6 +130,9 @@ def main() -> int:
                 if not stripped or stripped == command:
                     continue
                 print(f"  {stripped.removeprefix(PROMPT).strip()}")
+            if not reply.rstrip().endswith(PROMPT):
+                print("Timed out before the console prompt returned.", file=sys.stderr)
+                return 1
 
     return 0
 

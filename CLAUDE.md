@@ -1,5 +1,9 @@
 # Working on PandaDeath
 
+The current default screen is the animated weather landscape. See
+`docs/landscape.md` for its behavior and Windows host verification. Older zoo
+and storm-screen notes below describe the project's development history.
+
 Firmware for a BTT Knomi V1 (ESP32-WROVER-E, 240×240 round GC9A01 panel).
 See [README.md](README.md) for hardware facts, pinout and panel quirks — this
 file is about *how to work on it*, not what it is.

@@ -212,28 +212,21 @@ mode on a screen with no error channel.
 **Trigger:** doing item 11. The streaming parser serves both, and the dial's
 central claim stops being an inference the moment it lands.
 
-## 13. There is no test setup, and the pressure trend wanted one
+## 13. Pressure trend tests are not yet in the host test setup
 
-`pressure_trend()` and `record_pressure()` were verified by extracting them
-verbatim from `weather.c` into a host harness and running twelve cases — both
-signs, spans scaled up and down, ring selection, duplicate and out-of-order
-timestamps, a null reading, a station change. All passed, and the bug that
-matters (a 6 h span quoted as a 3 h one) is exactly the kind that hardware
-cannot show you: real pressure does not move fast enough to exercise it.
+The landscape added the second piece of portable logic and a native GCC/LVGL
+test setup (`tools/test_landscape.ps1`). It compiles production sources directly
+and covers weather classification, freshness, daylight, and screen rendering.
 
-The harness is not committed. It depends on textually extracting two functions
-from a source file, so it would break the first time either moved, and a test
-that lies about what it covers is worse than none.
+The pressure trend's earlier twelve-case extracted harness is still not
+committed. Moving the history calculations into a portable module would let
+the new setup test them without copying functions out of `weather.c`.
 
-**Why it waits:** IDF ships `unity` and supports a host-target build, but
-adopting it means a second build configuration, deciding what belongs in it, and
-maintaining that decision. That is a real commitment, and it should be made
-deliberately rather than as a side effect of one function needing twelve cases.
+**Why it waits:** the landscape does not change pressure calculations, and
+extracting them now would broaden the behavioral change being verified.
 
-**Trigger:** the second piece of pure logic that cannot be checked on hardware.
-The first one has now happened; a second means the pattern is real rather than
-an exception, and the harness above is the argument for what such a setup would
-have caught.
+**Trigger:** the next pressure-history change. Add those cases to the existing
+host runner rather than creating another temporary extracted harness.
 
 ## 14. A failed first SNTP sync is not retried promptly, and it stalls everything
 
